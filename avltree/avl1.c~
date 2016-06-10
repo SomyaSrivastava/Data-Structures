@@ -1,0 +1,148 @@
+# include <stdio.h>
+# include <malloc.h>
+# include <math.h>
+#define MAX(a,b) (((a)>(b)) ? (a) : (b)) 
+typedef struct AVLNode
+{
+	int value;
+	struct AVLNode *left, *right;
+	int height;
+}AVL;
+void InOrder(AVL *r)
+{
+	if(!r)
+		return;
+	InOrder(r->left);
+	printf("%d (h : %d )",r->value,r->height);
+	InOrder(r->right);
+}
+AVL* create_AVLnode(int data)
+{
+	AVL *nNode = (AVL *)malloc(sizeof(AVL));
+	nNode->left = nNode->right = NULL;
+	nNode->value = data;
+	nNode->height = 0;
+	return nNode;
+}
+void calc_height(AVL *root)
+{
+	if(root->left && root->right)
+		root->height = MAX(root->left->height, root->right->height) + 1;
+	else if(root->left)
+		root->height = root->left->height + 1;
+	else if(root->right)
+		root->height = root->right->height + 1;
+	else
+		root->height = 0;
+}
+int diff_LRheight(AVL *root)
+{
+	if(root->left && root->right)
+		return abs((root->left->height) - (root->right->height));
+	else if(root->left)
+		return (root->left->height + 1);
+	else if(root->right)
+		return (root->right->height + 1);
+	else
+		return 0;
+}
+void calc_tree_height(AVL *root)
+{
+	if(!root)
+		return;
+	calc_tree_height(root->left);
+	calc_tree_height(root->right);
+	calc_height(root);
+}
+int Insert(AVL **root, int data)
+{
+	AVL *nNode = create_AVLnode(data);
+	if(!nNode)
+		return -1;
+	if(!(*root))
+	{
+		*root = nNode;
+		printf("\nNode : %d , height : %d",(*root)->value,(*root)->height);
+	}
+	else if(data < (*root)->value)
+	{
+		Insert(&((*root)->left), data);
+		calc_height(*root);
+		printf("\nNode : %d , height : %d",(*root)->value,(*root)->height);
+		if(diff_LRheight(*root) == 2)
+		{
+			if(data<((*root)->left->value))
+				right_rotate(root);		//LL imbalance
+			else
+			{
+				left_rotate(&((*root)->left));	//LR imbalance
+				right_rotate(root);
+			}
+			calc_tree_height(*root);
+		}
+	}
+	else
+	{
+		Insert(&((*root)->right), data);
+		calc_height(*root);
+		printf("\nNode : %d , height : %d",(*root)->value,(*root)->height);
+		if(diff_LRheight(*root) == 2)
+		{
+			if(data<((*root)->right->value))
+			{
+				right_rotate(&((*root)->right));
+				left_rotate(root);		//RL imbalance
+			}
+			else
+				left_rotate(root);		//RR imbalance
+			calc_tree_height(*root);
+		}
+	}
+	
+	return 0;
+}
+int right_rotate(AVL **pivot)
+{
+	AVL *temp = (*pivot)->left;
+	(*pivot)->left = (*pivot)->left->right;
+	temp->right = *pivot;
+	*pivot = temp;
+	return 0;
+}
+
+int left_rotate(AVL **pivot)
+{
+	AVL *temp = (*pivot)->right;
+	(*pivot)->right = (*pivot)->right->left;
+	temp->left = *pivot;
+	*pivot = temp;
+	return 0;
+}
+
+int main()
+{
+	int ch;
+	int data;
+	AVL *root = NULL;
+	printf("\n\nAVL Tree operations...\n");
+	do
+	{
+		printf("\nEnter\n1. To insert a new node\n\nOther number to exit\n");
+		scanf("%d",&ch);
+		switch(ch)
+		{
+			case 1 :
+					printf("\nEnter the data value to insert: ");
+					scanf("%d",&data);
+					if(Insert(&root,data))
+						printf("\n\nInsertion error\n\n");
+					else
+						printf("\n\nData successfully inserted\n\n");
+					InOrder(root);
+			break;
+
+			default :
+					return 0;
+		}
+	}while(1);
+}

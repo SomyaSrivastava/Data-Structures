@@ -1,0 +1,78 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 100
+void heapsort(int ar[MAX],int size)
+{
+int i,j,temp,sorted[size];
+sorted[0]=-1;
+
+for(i=size,j=0;i>=1;i--,j++)
+{
+	minheap(ar,i);
+	sorted[j]=ar[1];
+	ar[1]=ar[i-1];
+}
+
+for(i=0;i<size;i++)
+	ar[i]=sorted[i];
+
+}
+
+
+void minheap(int ar[MAX],int size)
+{
+int i,left,right,temp,val;
+for(i=size/2;i>=1;i--)
+{
+	temp=i;
+	left=2*i;
+	right=2*i +1;
+	
+	if(left < size && ar[left] < ar[temp])
+		temp=left;
+
+	if(right < size && ar[right] < ar[temp])
+		temp=right;
+
+	if(temp!=i)
+	{
+		val=ar[i];
+		ar[i]=ar[temp];
+		ar[temp]=val;
+		minheap(ar,size);
+	}
+}
+}
+void display(int arr[], int size) {
+	int i;
+	for(i = 0; i < size; i++) {
+		printf("%d ", arr[i]);
+	}
+	printf("\n");
+}
+void main()
+{
+
+	int size,i;
+	int ar[MAX];
+
+	printf("\n ENTER THE SIZE OF THE ARRAY : ");
+	scanf("%d",&size);
+
+	printf("\n ENTER THE VALUES IN ARRAY : ");
+
+	for(i=0;i<size;i++)
+		scanf("%d",&ar[i]);
+	
+	printf("\n UNSORTED ARRAY : \n");
+
+	display(ar,size);
+
+	heapsort(ar,size);
+
+	printf("\n SORTED ARRAY : \n");
+
+	display(ar,size);
+
+
+}

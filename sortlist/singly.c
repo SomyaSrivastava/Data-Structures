@@ -1,0 +1,244 @@
+#include"singly.h"
+/*
+#include<malloc.h>
+#include<stdlib.h>
+
+typedef struct node
+{
+	int data;
+	struct node* next;
+}NODE;
+
+typedef struct list
+{
+	NODE* head;
+	NODE* last;
+}LIST;
+
+//Function prototyping
+int init(LIST* L);
+NODE* create_node(int value);
+int is_empty(LIST L);
+int append(LIST* L,int value);
+int insert(LIST* L,int value,int pos);
+NODE* search(LIST L,int data);
+int delete(LIST* L,int pos,int *d);
+void display(LIST L);
+
+/*void main()
+{
+	LIST L;
+	int value,r,ch;
+	int d;
+	NODE* new_node;
+	NODE* ptr;
+	int pos;
+
+	if(init(&L))
+	printf("LIST IS INITIALIZED");	
+	else
+	printf("INITIALIZATION ERROR");
+	
+	while(1)
+	{
+		printf("\nMENU \n1.APPEND \n2.DISPLAY \n3.DELETE \n4.SEARCH \n5.INSERT AT A PARTICULAR POSITION \n6.EXIT\n");
+		printf("\n ENTER YOUR CHOICE : ");		
+		scanf("%d",&ch);		
+		switch(ch)
+		{
+		case 1 :
+		
+				printf("\n ENTER VALUE TO BE INSERTED : ");
+				scanf("%d",&value);
+				if(append(&L,value))
+					display(L);
+				else
+				printf("\n ERROR IN APPENDING !");
+				break;
+	 	case 2 :
+				printf("\n");
+				display(L);
+				break;
+
+		case 3 :
+				
+				printf("\n ENTER POSTION YOU WISH TO DELETE : ");
+				scanf("%d",&pos);
+				if(delete(&L,pos,&d))
+					display(L);
+	
+				else
+					printf("node not deleted");
+				break;
+	       case 4 :		
+				printf("\n ENTER THE DATA WHICH YOU WISH TO SEARCH : ");
+				scanf("%d",&r);
+				ptr=search(L,r);
+				if(ptr!=NULL)
+					printf("\n NODE FOUND !");		
+				else
+					printf("\n SEARCH UNSUCCESSFULL !");
+				break;
+	       case 5 :		
+				printf("\n ENTER THE DATA YOU WISH TO ENTER : ");
+				scanf("%d",&r);
+				printf("\n ENTER THE POSITION AT WHICH YOU NEED TO INSERT (STARTING POSITION IS 0) : ");
+				scanf("%d",&pos);
+				if(insert(&L,r,pos))
+					display(L);
+				else
+					printf("\n INSERTION UNSUCCESSFULL ! \n");
+				break;
+               case 6 :
+				exit(1);
+		default :
+				printf("\n WRONG CHOICE \n");
+	}
+}
+}*/
+
+int init(LIST* L)
+{
+		L->head=NULL;
+		L->last=NULL;
+		return 1;
+}
+
+
+NODE* create_node(int value)
+{
+	NODE* ptr;
+	ptr=(NODE*)malloc(sizeof(NODE));
+	
+	if(ptr!=NULL)
+	{
+		ptr->data=value;
+		ptr->next=NULL;
+		return ptr;
+	}
+	else 
+		return NULL;
+}
+
+
+int is_empty(LIST L)
+{
+	if(L.head==NULL)
+		return 1;
+	else
+		return 0;
+}
+
+
+int append(LIST* L,int value)
+{
+	NODE* new_node;
+	new_node=create_node(value);
+	
+	if(new_node!=NULL)
+		{
+			if(is_empty(*L))
+				L->last=L->head=new_node;
+			else
+				{
+					L->last->next=new_node;		
+					L->last=new_node;
+				}
+			return 1;
+		}
+	else
+		return 0;
+		
+}
+
+void display(LIST L)
+{
+	NODE* ptr;
+	ptr=L.head;
+	while(ptr!=NULL)
+	{
+		printf(" %d -> ",ptr->data);
+		ptr=ptr->next;
+	}
+
+}
+
+int delete(LIST* L,int pos,int* d)
+{
+	NODE* ptr;
+	NODE* temp;
+	int p=0;
+		
+	
+	ptr=L->head;
+
+	if(is_empty(*L))
+		return 0;
+	else if(pos==0)
+		{
+			 *d=ptr->data;
+			 L->head=ptr->next;
+			 free(ptr);					 
+				return 1;
+		} 
+	else 
+		{
+			while(ptr!=NULL)
+				{
+					if(p==(pos-1))
+					{
+						*d=ptr->data;
+						temp=ptr->next;
+						ptr->next=temp->next;
+						free(temp);
+						return 1;
+					}
+					ptr=ptr->next;
+				}
+			return 0;
+			
+		}
+}
+
+int insert(LIST* L,int value,int pos)
+{
+	NODE* ptr;
+	NODE* temp;
+	int p=0;
+					
+	temp=L->head;
+	ptr=create_node(value);	
+					
+	if(pos==0)
+	{
+		ptr->next=L->head;
+		L->head=ptr;
+		return 1;
+	}			
+					
+	else
+	{
+		while(p!=(pos-1))
+		{
+							
+			temp=temp->next;
+			p++;
+		}
+		ptr->next=temp->next;
+		temp->next=ptr;
+		return 1;
+	}
+
+	return 0;
+}
+
+
+NODE* search(LIST L,int data)
+{
+	NODE* ptr;
+	ptr=L.head;
+	while(ptr!=NULL && ptr->data!=data)
+		ptr=ptr->next;
+	return ptr;
+}
+

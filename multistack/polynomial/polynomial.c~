@@ -1,0 +1,388 @@
+ #include<stdio.h>
+#include<malloc.h>
+#include<stdlib.h> 
+typedef struct term
+ {
+ 	int coeff;
+	int pow;
+ }TERM;
+typedef struct node
+{
+	TERM T;
+	struct node* prev;
+	struct node* next;
+}NODE;
+ 
+typedef struct list
+ {
+ 	NODE* head;
+ 	NODE* tail;
+ 	int count;
+ }LIST;
+ 
+ //Function prototyping
+ void initialise(LIST* L);
+ NODE* createNode(TERM T);
+ int insertAtPosition(LIST *L,int pos,TERM T);
+ int addAtBeg(LIST* L,TERM T);
+ int append(LIST* L,TERM T);
+ void displayAll(LIST L);
+ int build(LIST* L,TERM T,int *pos);
+ int delete(LIST *L,int pos);
+ int add(LIST* L,const LIST* L1,const LIST* L2);
+ 
+ void main()
+ {
+ 	LIST L1,L2,L3;
+	TERM T;
+	NODE* new_node;
+	int pos,ch;
+ 	initialise(&L1);
+	initialise(&L2);
+	initialise(&L3);
+
+	printf("\n WORKING WITH FIRST POLYNOMIAL ! : ");	
+	while(1)
+	{	
+		printf("\n MENU");		
+		printf("\n 1.INSERT : ");
+		printf("\n 2.DISPLAY : ");
+		printf("\n 3.EXIT");
+		printf("\n ENTER YOUR CHOICE : ");
+		scanf("%d",&ch);
+		switch(ch)
+		{
+			case 1 :
+					printf("\n ENTER COEEFICIENT :");
+					scanf("%d",&T.coeff);
+					printf("\n POWER : ");
+					scanf("%d",&T.pow);
+					
+					new_node=createNode(T);
+					
+					if(build(&L1,T,&pos))
+						printf("\nINSERT SUCCESSFULL OF TERM NUMBER %d : ",L1.count);
+					else
+						printf("\nINSERT UNSUCCESSFULL !");
+					break;
+			case 2 :
+					displayAll(L1);				
+					break;
+
+			case 3 :
+					exit(1);			
+			default :
+					printf("\n wrong choice!");
+		}//end of switch
+
+	}//end of while(1)
+
+ printf("\n WORKING WITH SECOND POLYNOMIAL ! : ");	
+	while(1)
+	{	
+		printf("\n MENU");		
+		printf("\n 1.INSERT : ");
+		printf("\n 2.DISPLAY : ");
+		printf("\n 3.EXIT");
+		printf("\n ENTER YOUR CHOICE : ");
+		scanf("%d",&ch);
+		switch(ch)
+		{
+			case 1 :
+					printf("\n ENTER COEEFICIENT :");
+					scanf("%d",&T.coeff);
+					printf("\n POWER : ");
+					scanf("%d",&T.pow);
+					
+					new_node=createNode(T);
+					if(build(&L2,T,&pos))
+						printf("\nINSERT SUCCESSFULL OF TERM NUMBER %d : ",L2.count");
+					else
+						printf("\nINSERT UNSUCCESSFULL !");
+					}
+
+					break;
+			case 2 :
+					displayAll(L2);				
+					break;
+
+			case 3 :
+					exit(1);			
+			default :
+					printf("\n wrong choice!");
+		}//end of switch
+
+	}// end of while(1)
+
+if(add(&L,&L1,&L2))
+	display(L);
+else
+	printf("\n COULD NOT ADD TWO POLYNOMIALS ");
+
+
+
+ }//end of main
+ 
+ 
+ void initialise(LIST* L)				//INITIALIZATION OF LIST
+ {
+ 	 L->head=NULL;
+ 	 L->tail=NULL;
+ 	 L->count=0;
+ }
+ 
+ NODE* createNode(TERM T)				// NODE CREATION
+ {
+ 	 TERM T_new;
+	 NODE* new_node;
+ 	 new_node=(NODE*) malloc(sizeof(NODE)); 
+ 	 
+ 	 if(new_node!=NULL)
+ 	 {
+ 	 	new_node->next=new_node->prev=NULL;
+ 	 	new_node->T.coeff=T.coeff;
+		new_node->T.pow=T.pow;
+	
+ 	 }
+ 	 
+	return new_node;
+ }
+
+
+ void displayAll(LIST L)                     //NODE DISPLAY
+ {
+	NODE *ptr;
+
+	ptr = L.head; 
+	while(ptr != NULL) 
+	{ 
+		printf("+ %dx^%d ", ptr->T.coeff,ptr->T.pow); 
+		ptr = ptr->next; 
+	} 
+	printf("\nTotal number of elements %d\n",L.count);
+ }
+ 
+ int build(LIST* L,TERM T,int *pos)                //SEARCH
+ {
+ 	*pos=0;
+	NODE* ptr;
+	int temp;
+	ptr = L->head; 
+
+	if(ptr==NULL)
+  		{
+  			L->head=L->tail=createNode(T);
+  			L->count++;
+  			return 1;
+  		}
+	else if(L->tail->T.pow > T.pow)
+		{
+			if(append(L,T))
+				return 1;
+			else
+				return 0;		
+		} 
+	else if(L->head->T.pow < T.pow)
+		{
+			if(addAtBeg(L,T))
+				return 1;
+			else
+				return 0;
+		}
+	else
+	{
+		while(ptr != NULL) 
+		{ 
+	
+				if(ptr->T.pow < T.pow)
+				{
+					{
+						if(insertAtPosition(L,(*pos-1),T))
+							return 1;
+					
+						else
+							return 0;
+					}
+				}
+			
+				else if(ptr->T.pow > T.pow )
+					{
+						if(insertAtPosition(L,(*pos+1),T))		
+							return 1;
+						else 
+							return 0;
+					}
+				else if(ptr->T.pow == T.pow)
+					{
+						{
+							ptr->T.coeff=ptr->T.coeff +T.coeff;
+							if(ptr->T.coeff==0)
+							{
+								if(delete(L,*pos))
+									printf("deleted");
+								else
+									printf("no");
+							}
+							return 1;
+						}
+							
+					}
+							
+					
+				*pos++;
+				ptr=ptr->next;		
+		}
+}
+}
+ int insertAtPosition(LIST* L,int pos,TERM T)			// INSERTION
+ {
+  	NODE *temp,*ptr;
+  	int count=0;
+  	
+  	if(pos > L->count)
+  		return 0;
+
+  	  	
+       if(pos < (L->count+1)/2)
+  	{
+  		ptr=L->head;
+  		while(count < pos)
+  		{
+  			ptr=ptr->next;
+  			count++;
+  		}
+  		
+  		temp=createNode(T);
+  		
+  		temp->next = ptr;
+ 		
+ 		if(ptr->prev !=NULL)
+ 		{
+ 			temp->prev=ptr->prev;
+ 			ptr->prev->next=temp;
+ 		} 		
+ 		else
+ 			L->head=temp;
+ 		
+ 		ptr->prev=temp;
+ 		L->count++;
+ 		return 1; 		
+  	}
+  	
+  	else
+  	{
+  		ptr=L->tail;
+  		count=L->count;
+  		while(count > pos)
+  		{
+  			ptr=ptr->prev;
+  			count--;
+  		}
+  		
+  		temp=createNode(T);
+  		temp->prev=ptr;
+  		
+  		if(ptr->next != NULL)
+  		{
+  			ptr->next->prev=temp;
+  			temp->next=ptr->next;
+  		}
+  		
+  		else
+  			L->tail=temp;
+  		
+		ptr->next=temp;
+  		L->count++;
+  		return 1; 		
+  	}
+}
+ int addAtBeg(LIST* L,TERM T)			// ADD AT BEG
+{
+		NODE* ptr;
+		ptr=L->head;
+		if(L->head=createNode(T))
+		{
+			L->head->next=ptr;
+			ptr->prev=L->head;
+			L->count++;
+			return 1;
+		}
+		else
+			return 0;
+}
+ int append(LIST* L,TERM T)			//ADD AT END
+{
+		NODE* ptr;
+		ptr=L->tail;
+		if(L->tail=createNode(T))
+		{
+		ptr->next=L->tail;
+		L->tail->prev=ptr;
+		L->count++;
+		return 1;
+		}
+}
+
+int delete(LIST *L,int pos)
+{
+		 	NODE *ptr;
+		 	int count=0;
+		 	
+		 	if(pos >= L->count)
+		 		return 0;
+		 		
+		 	if(pos==0)
+		 	{
+		 		ptr=L->head;
+		 		ptr->next->prev=NULL;
+		 		L->head=ptr->next;
+		 		free(ptr);
+		 		L->count--;
+		 		return 1;
+		 	}
+		 	
+		 	if(pos == L->count-1)
+		 	{
+		 		ptr=L->tail;
+		 		ptr->prev->next=NULL;
+		 		L->tail=ptr->prev;
+		 		free(ptr);
+		 		L->count--;
+		 		return 1;
+		 	}	
+		 	
+
+		 	if(pos < (L->count+1)/2)
+		  	{
+		  		ptr=L->head;
+		  		while(count < pos)
+		  		{
+		  			ptr=ptr->next;
+		  			count++;
+		  		}	
+		  	}
+		  	
+		  	else
+		  	{
+		  		ptr=L->tail;
+		  		count=L->count;
+		  		while(count > pos+1)
+		  		{
+		  			ptr=ptr->prev;
+		  			count--;
+		  		} 		
+		  	}
+		  	
+		  	ptr->prev->next=ptr->next;
+		  	ptr->next->prev=ptr->prev;
+		  	L->count--;
+		  	
+		 return 1; 	
+ }
+
+int add(LIST* L,const LIST* L1 ,const LIST* L2)
+ {
+		for()	
+
+ }
+

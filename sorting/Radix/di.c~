@@ -1,0 +1,24 @@
+#include<stdio.h>
+
+
+int digit(int data,int pos,int key)
+{
+int i,dig;
+dig=1;
+for(i=pos;i>key;i--)
+	dig=dig*10;
+dig=(data/dig)%10;
+return dig;
+
+}
+
+void main()
+{
+int data,pos,dig,key;
+scanf("%d",&data);
+scanf("%d",&pos);
+scanf("%d",&key);
+dig=digit(data,pos,key);
+printf("%d",dig);
+}
+

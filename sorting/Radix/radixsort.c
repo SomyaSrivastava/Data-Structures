@@ -1,0 +1,74 @@
+#include"q.h"
+#include<stdio.h>
+#define MAX 100
+
+void radix(int n,int key,int ar[MAX])
+{
+	QUEUE Q[10];
+	int i,j,k,b,d;
+	int q;
+	int size;
+	size=key;
+	for(i=0;i<10;i++)
+		initQ(&Q[i]);
+
+	while(key!=0)
+	{
+		q=0;		
+		for(j=0;j<n;j++)
+		{
+			b=digit(ar[j],key,size);			
+			enque(&Q[b],ar[j]);
+			if(b==1)
+				printf("\n %dst bucket : \n",b);
+			else
+				printf("\n %dth bucket : \n",b);			
+			displayQ(Q[b]);
+		}
+				
+		k=0;
+		for(i=0;i<10;i++)
+		{
+			{
+				while(!isEmptyQ(Q[i]))				
+				{
+				 dequeue(&Q[i],&d);
+				 ar[k]=d;
+				 k++;
+				}
+			
+			}
+		}
+		--key;		
+	}
+}
+int digit(int data,int pos,int key)
+{
+int i,dig;
+dig=1;
+for(i=pos;i<key;i++)
+	dig=dig*10;
+dig=(data/dig)%10;
+return dig;
+
+}
+
+void main()
+{
+	int n,i,ar[MAX],key;
+	printf("\n ENTER THE SIZE OF THE SIZE OF ARRAY : ");
+	scanf("%d",&n);
+	
+	printf("\n ENTER THE SIZE OF THE SYMBOL : ");
+	scanf("%d",&key);
+	printf("\n ENTER THE ARRAY : ");
+	for(i=0;i<n;i++)
+		scanf("%d",&ar[i]);	
+	
+	radix(n,key,ar);
+	
+	printf("\n SORTED ARRAY IS : \n");
+	for(i=0;i<n;i++)
+		printf("%d ",ar[i]);
+
+}

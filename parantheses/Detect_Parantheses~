@@ -1,0 +1,120 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 100
+typedef struct stack
+{
+	char* st;
+	int top;
+}STACK;
+
+void init(STACK *s); //initialize the top variable
+int isEmpty(const STACK *s);//check weather top == -1
+int isFull(const STACK *s);//check weather top == MAX - 1
+int push(STACK *s, int elem); // increment the top and push the element in the stack.
+int pop(STACK *s, int *poppedELem);
+void display(const STACK s); // print top-number of values from stack.
+
+void main()
+{
+	STACK* s;
+	int ch;
+	char data;
+	char* popped_element;
+	
+	init(&s);
+	
+	while(1)
+	{
+		printf("\n  MENU : ");
+		printf("\n 1.PUSH ? ");
+		printf("\n 2.POP ? ");
+		printf("\n 3.DISPLAY ? ");
+		printf("\n 4.EXIT ? ");
+		printf("\n ENTER YOUR CHOICE : ");
+		scanf("%d",&ch);
+	
+		switch(ch)
+		{
+			case 1 :
+
+						printf("\n ENTER THE VALUE TO BE PUSHED : ");
+						scanf("%d",&data);
+						if(push(s,data))
+							display(s);
+						else
+							printf("\n PUSH OPERATION UNSUCCESSFULL ! ");				
+						break;					
+				
+			case 2 :
+
+						if(pop(s,popped_element))
+							display(s);
+						else
+							printf("\n POP OPERATION UNSUCCESSFULL ! ");				
+						break;					
+			case 3 :
+						printf("\n THANK YOU FOR USING APPLICATION ! ");
+						getch();
+						exit(1);
+						
+			default :
+						printf("\n WRONG CHOICE ! ");
+		}
+	}
+
+}
+void init(STACK *s)
+{
+s->top=-1;
+}
+int isEmpty(const STACK* s)
+{
+if(s->top==-1)
+	return 1;
+else 
+	return 0;
+}
+int isFull(const STACK* s)
+{
+	s->top==MAX-1;
+		return 1;
+	else
+		return 0;
+}
+int push(STACK* s,int elem)
+{
+	top++;
+	if(is_Full)
+		return 0;
+	else
+		{
+			s[top]=elem;
+			return 1;
+		}
+}
+int pop(STACK* s,int *poppedElem)
+{
+	if(is_Empty)
+		return 0;
+	else
+	{
+		*poppedElem=s[top];
+		top--;
+		return 1;
+	}	
+}
+void printValues(const STACK s)
+{
+	if(!is_Empty)
+	{
+	for(i=0;i<=top;i++)
+		printf("%d-> ",s[top]);
+	}
+	else
+	printf("\n Stack is empty");
+}
+
+
+
+
+
